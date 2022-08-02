@@ -59,7 +59,7 @@ void sortfile(FILE* fp){
 	int c,i,pass = 0;
 	FILE* fpj;
 	fpj = fopen("out.txt", "r");
-    fp = fopen("outsort.txt", "wr");
+    	fp = fopen("outsort.txt", "wr");
     
 	
 	if (fpj == NULL) {
@@ -96,7 +96,7 @@ void sortfile(FILE* fp){
 		fprintf(fp,"%s\n",line[i]);
 	}
 
-    fclose(fp);
+    	fclose(fp);
 	fclose(fpj);
     
 }
