@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define BUFFERSIZE 2048
-#define MAXNUMBERS 100
+#define MAXNUMBERS 4000
 
 char *str_replace(char *orig, char *rep, char *with) {
     char *result; // the return string
@@ -54,12 +54,11 @@ char *str_replace(char *orig, char *rep, char *with) {
 
 void sortfile(FILE* fp){
 	char line[MAXNUMBERS][BUFFERSIZE];
-	//long line[MAXNUMBERS];
 	char tmp[BUFFERSIZE];
 	int c,i,pass = 0;
 	FILE* fpj;
 	fpj = fopen("out.txt", "r");
-    	fp = fopen("outsort.txt", "wr");
+    fp = fopen("outsort.txt", "w");
     
 	
 	if (fpj == NULL) {
@@ -74,8 +73,8 @@ void sortfile(FILE* fp){
 		line[i][strlen(line[i]) - 1] = '\0';
 		i++;
 	}
-
 	c = i;
+
 	for(int i = 0; i < c; i++)
 	{
     	for(int j = i+1; j < c; j++)
@@ -91,23 +90,21 @@ void sortfile(FILE* fp){
 			pass++;
 	}
 
-	for(int i=0; i <= c; i++)
+	for(int i=0; i <c - 1; i++)
 	{
 		fprintf(fp,"%s\n",line[i]);
 	}
-
-    	fclose(fp);
+    fclose(fp);
 	fclose(fpj);
     
 }
 
-void wordexch(FILE* fin, FILE* fout){
+void replace(FILE* fin, FILE* fout){
 char* result;
 char buffer[BUFFERSIZE];
 char oldword[] = "123";
 char newword[] = "321";
-bool reading = true;
-int c;
+
 fin = fopen("in.txt", "r");
 fout = fopen("out.txt", "wr");
 
@@ -116,14 +113,14 @@ if (fin == NULL)
 	printf("Couldn't open file in.txt!");
 	exit(1);
 }
-
 while(!feof(fin)){
 	fgets(buffer, BUFFERSIZE, fin);
 	result = str_replace(buffer,oldword,newword);
 	fprintf(fout,"%s", result);
 }
-
-
+for(int i=0; i < 10; i++){
+	printf("%s\n", result);
+}
 fclose(fin);
 fclose(fout);
 
@@ -132,7 +129,7 @@ fclose(fout);
 int main()
 {
 FILE* fpi, *fpo, *fpos;
-wordexch(fpi,fpo);
+replace(fpi,fpo);
 sortfile(fpos);
 return 0;
 }
