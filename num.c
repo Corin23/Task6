@@ -1,135 +1,111 @@
+#include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include <time.h>
+#include <unistd.h>
 
 #define BUFFERSIZE 2048
-#define MAXNUMBERS 4000
+#define MAXNUMBERS 1000000
 
-char *str_replace(char *orig, char *rep, char *with) {
-    char *result; // the return string
-    char *ins;    // the next insert point
-    char *tmp;    // varies
-    int len_rep;  // length of rep (the string to remove)
-    int len_with; // length of with (the string to replace rep with)
-    int len_front; // distance between rep and end of last rep
-    int count;    // number of replacements
+void replacestr(char *target, const char *what, const char *with) {
+  char *pch;
 
-    // sanity checks and initialization
-    if (!orig || !rep)
-        return NULL;
-    len_rep = strlen(rep);
-    if (len_rep == 0)
-        return NULL; // empty rep causes infinite loop during count
-    if (!with)
-        with = "";
-    len_with = strlen(with);
+  assert(strlen(what) == strlen(with));
 
-    // count the number of replacements needed
-    ins = orig;
-    for (count = 0; tmp = strstr(ins, rep); ++count) {
-        ins = tmp + len_rep;
+  while ((pch = strstr(target, what)) != NULL) {
+    strncpy(pch, with, strlen(with));
+    pch += strlen(with);
+  }
+}
+
+void quicksort(long long number[], int first, int last) {
+  long i, j, pivot, temp;
+  if (first < last) {
+    pivot = first;
+    i = first;
+    j = last;
+
+    while (i < j) {
+      while (number[i] <= number[pivot] && i < last)
+        i++;
+      while (number[j] > number[pivot])
+        j--;
+      if (i < j) {
+        temp = number[i];
+        number[i] = number[j];
+        number[j] = temp;
+      }
     }
-
-    tmp = result = malloc(strlen(orig) + (len_with - len_rep) * count + 1);
-
-    if (!result)
-        return NULL;
-
-    // first time through the loop, all the variable are set correctly
-    // from here on,
-    //    tmp points to the end of the result string
-    //    ins points to the next occurrence of rep in orig
-    //    orig points to the remainder of orig after "end of rep"
-    while (count--) {
-        ins = strstr(orig, rep);
-        len_front = ins - orig;
-        tmp = strncpy(tmp, orig, len_front) + len_front;
-        tmp = strcpy(tmp, with) + len_with;
-        orig += len_front + len_rep; // move to next "end of rep"
-    }
-    strcpy(tmp, orig);
-    return result;
+    temp = number[pivot];
+    number[pivot] = number[j];
+    number[j] = temp;
+    quicksort(number, first, j - 1);
+    quicksort(number, j + 1, last);
+  }
 }
 
-void sortfile(FILE* fp){
-	char line[MAXNUMBERS][BUFFERSIZE];
-	char tmp[BUFFERSIZE];
-	int c,i,pass = 0;
-	FILE* fpj;
-	fpj = fopen("out.txt", "r");
-    fp = fopen("outsort.txt", "w");
-    
-	
-	if (fpj == NULL) {
+void sortfile(FILE *fp) {
+  long long Arr[MAXNUMBERS];
+  int c, i, j, pass = 0;
+  FILE *fpj;
+  fpj = fopen("out.txt", "r");
+  fp = fopen("outsort.txt", "w");
 
-      perror("Failed: ");
-      exit(1);
+  if (fpj == NULL) {
 
-    }
+    perror("Failed: ");
+    exit(1);
+  }
+  printf("%s\n", "File oppened!");
 
-	while(fgets(line[i],BUFFERSIZE,fpj))
-	{
-		line[i][strlen(line[i]) - 1] = '\0';
-		i++;
-	}
-	c = i;
+  while (!feof(fpj) && (c < MAXNUMBERS)) {
+    fscanf(fpj, "%lld\n", &Arr[c++]);
+  }
+  printf("Size of Arr element: %ld\n", sizeof(Arr[1]));
+  quicksort(Arr, 0, c - 1);
+  for (int i = 0; i < c - 1; i++) {
+    printf("%lld\n", Arr[i]);
+    fprintf(fp, "%lld\n", Arr[i]);
+  }
 
-	for(int i = 0; i < c; i++)
-	{
-    	for(int j = i+1; j < c; j++)
-   		{
-
-      	if(strlen(line[j]) < strlen(line[i])) 
-		{
-         strcpy(tmp, line[i]);
-         strcpy(line[i], line[j]);
-         strcpy(line[j], tmp);
-      	}
-   		}
-			pass++;
-	}
-
-	for(int i=0; i <c - 1; i++)
-	{
-		fprintf(fp,"%s\n",line[i]);
-	}
-    fclose(fp);
-	fclose(fpj);
-    
+  // c = i;
+  fclose(fp);
+  fclose(fpj);
 }
 
-void replace(FILE* fin, FILE* fout){
-char* result;
-char buffer[BUFFERSIZE];
-char oldword[] = "123";
-char newword[] = "321";
+void replace(FILE *fin, FILE *fout) {
+  char *result;
+  char buffer[BUFFERSIZE];
+  char oldword[] = "123";
+  char newword[] = "321";
 
-fin = fopen("in.txt", "r");
-fout = fopen("out.txt", "wr");
+  fin = fopen("in.txt", "r");
+  fout = fopen("out.txt", "wr");
 
-if (fin == NULL)
-{
-	printf("Couldn't open file in.txt!");
-	exit(1);
-}
-while(!feof(fin)){
-	fgets(buffer, BUFFERSIZE, fin);
-	result = str_replace(buffer,oldword,newword);
-	fprintf(fout,"%s", result);
-}
-for(int i=0; i < 10; i++){
-	printf("%s\n", result);
-}
-fclose(fin);
-fclose(fout);
+  if (fin == NULL) {
+    printf("Couldn't open file in.txt!");
+    exit(1);
+  }
+  while (!feof(fin)) {
+    fgets(buffer, BUFFERSIZE, fin);
+    replacestr(buffer, oldword, newword);
+    fprintf(fout, "%s", buffer);
+  }
 
+  fclose(fin);
+  fclose(fout);
 }
 
-int main()
-{
-FILE* fpi, *fpo, *fpos;
-replace(fpi,fpo);
-sortfile(fpos);
-return 0;
+int main() {
+  double time_spent = 0.0;
+  FILE *fpi, *fpo, *fpos;
+  clock_t begin = clock();
+  replace(fpi, fpo);
+  sortfile(fpos);
+  clock_t end = clock();
+  time_spent += (double)(end - begin) / CLOCKS_PER_SEC;
+  printf("Time elapsed %f", time_spent);
+  return 0;
 }
