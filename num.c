@@ -3,11 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <unistd.h>
+#include <stdint.h>
 
 #define BUFFERSIZE 2048
-#define MAXNUMBERS 1000000
+#define FILE_IN "in.txt"
+#define FILE_OUT "out.txt"
+const char *rep = "123";
+const char *with = "321";
+
 
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
@@ -29,14 +32,10 @@ int cmpfunc(const void *a, const void *b) {
 void dataprocessing(FILE *in, FILE *out) {
   
   long long maxlines = 256;
+  long long val;
   
   long long *arr = (long long *)malloc(maxlines * sizeof(long long));
   char *line = (char *)malloc(BUFFERSIZE * sizeof(char));
-
-  long long val;
-
-  const char *rep = "123";
-  const char *with = "321";
 
   int i = 0, lines = 0;
 
@@ -44,10 +43,13 @@ void dataprocessing(FILE *in, FILE *out) {
   out = fopen(FILE_OUT, "w");
 
   while (!feof(in)) {
-    if (lines > maxlines) {
+
+    if (lines > maxlines)
+    {
       maxlines *= 2;
-      arr = (long long *)realloc(arr, maxlines * sizeof(long long));
+      arr = (long long*)realloc(arr, maxlines * sizeof(long long));
     }
+
     fgets(line, BUFFERSIZE, in);
     replacestr(line, rep, with);
     lines++;
