@@ -1,13 +1,13 @@
 #include <assert.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 #define BUFFERSIZE 2048
-#define FILE_IN "in.txt"
-#define FILE_OUT "out.txt"
+#define MAXNUMBERS 1000000
 
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
@@ -27,9 +27,9 @@ int cmpfunc(const void *a, const void *b) {
 }
 
 void dataprocessing(FILE *in, FILE *out) {
-
+  
   long long maxlines = 256;
-
+  
   long long *arr = (long long *)malloc(maxlines * sizeof(long long));
   char *line = (char *)malloc(BUFFERSIZE * sizeof(char));
 

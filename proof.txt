@@ -1,0 +1,83 @@
+Tested the following scenarios.
+
+100 numbers:
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ vim rand.c
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ cc -Wall rand.c -o rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ ./rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ time ./num
+
+real	0m0,006s
+user	0m0,000s
+sys	0m0,004s
+
+"123" into in.txt: 2
+"321" into out.txt: 2 and 0 "123"
+
+
+1k numbers:
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ vim rand.c
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ cc -Wall rand.c -o rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ ./rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ time ./num
+
+real	0m0,006s
+user	0m0,000s
+sys	0m0,005s
+
+"123" into in.txt: 12
+"321" into out.txt: 20 and 0 "123"
+
+10k numbers:
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ vim rand.c
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ cc -Wall rand.c -o rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ ./rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ time ./num
+
+real	0m0,019s
+user	0m0,014s
+sys	0m0,004s
+
+"123" into in.txt: 116
+"321" into out.txt: 179 and 0 "123"
+
+
+100k number:
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ vim rand.c
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ cc -Wall rand.c -o rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ ./rand
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ time ./num
+
+real	0m0,067s
+user	0m0,050s
+sys	0m0,016s
+
+"123" into in.txt: 1218
+"321" into out.txt: 1911 and 0 "123"
+
+1 mil numbers:
+
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ cc -Wall num.c -o num
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ ./num
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ time ./num
+
+real	0m3,153s
+user	0m2,984s
+sys	0m0,168s
+
+"123" into in.txt: 12191
+"321" into out.txt: 18956 and 0 "123"
+
+
+10 mil numbers: 
+
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ cc -Wall num.c -o num
+corin@otp-cdobrica-l1:~/Desktop/Tasks/Task6$ time ./num
+
+real	0m3,153s
+user	0m2,984s
+sys	0m0,168s
+
+ctrl+F doesn't work to display the difference between "123" and "321" searches.
+
+The numbers were sorted in ascending order with qsort.
+
