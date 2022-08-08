@@ -9,7 +9,6 @@ const char *file_out = "out.txt";
 const char *rep = "123";
 const char *with = "321";
 const long long maxlines = 100000;
-int lines = 0;
 
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
@@ -31,7 +30,7 @@ int cmpfunc(const void *a, const void *b) {
 long long *processinput(const char *fin) {
   FILE *in;
   long long val, filesize = maxlines;
-  int c;
+  int lines = 0, c;
 
   long long *arr = (long long *)malloc(filesize * sizeof(long long));
   if (arr == NULL) {
@@ -69,15 +68,32 @@ long long *processinput(const char *fin) {
       }
     }
   }
-
   fclose(in);
   return arr;
   free(arr);
 }
 
-void genoutput(const char *fout, long long *array) {
-  FILE *out;
+int countlines(const char *filein) {
+  FILE *fin;
+  int s, counter = 0;
+  char *line = (char *)malloc(buffersize * sizeof(char));
 
+  fin = fopen(filein, "r");
+
+  if (fin == NULL) {
+    printf("Couldn't open file");
+    exit(5);
+  }
+
+  while ((s = fscanf(fin, "%s", line)) != EOF)
+    counter++;
+
+  fclose(fin);
+  return counter;
+}
+
+void genoutput(const char *fout, long long *array, int lines) {
+  FILE *out;
   out = fopen(fout, "w");
 
   if (out == NULL) {
@@ -95,7 +111,7 @@ void genoutput(const char *fout, long long *array) {
 }
 
 int main() {
-
-  genoutput(file_out, processinput(file_in));
+  int nmblines = countlines(file_in);
+  genoutput(file_out, processinput(file_in), nmblines);
   return 0;
 }
