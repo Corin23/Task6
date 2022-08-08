@@ -51,7 +51,7 @@ void dataprocessing(const char *filei, const char *fileo) {
 
     if (lines > maxlines) {
       filesize += maxlines;
-      arr = (long long *)realloc(arr, maxlines * sizeof(long long));
+      arr = (long long *)realloc(arr, filesize * sizeof(long long));
       if (arr == NULL) {
         printf("%s", "Couldn\'t reallocate memory for arr! Exiting...\n");
         exit(3);
