@@ -8,7 +8,7 @@ const char *file_in = "in.txt";
 const char *file_out = "out.txt";
 const char *rep = "123";
 const char *with = "321";
-long long maxlines = 4096;
+const long long maxlines = 100000;
 
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
@@ -30,45 +30,43 @@ int cmpfunc(const void *a, const void *b) {
 void dataprocessing(const char *filei, const char *fileo) {
 
   FILE *in, *out;
-  long long val;
+  long long val, filesize = maxlines;
 
-  long long *arr = (long long *)malloc(maxlines * sizeof(long long));
+  long long *arr = (long long *)malloc(filesize * sizeof(long long));
   char *line = (char *)malloc(buffersize * sizeof(char));
 
   if (arr == NULL || line == NULL) {
-    printf("Memory couldn't be allocated! Exiting...\n");
+    printf("%s", "Memory couldn\'t be allocated! Exiting...\n");
     exit(2);
   }
 
-  int i = 0, lines = 0;
+  int i = 0, lines = 0, c;
 
   in = fopen(filei, "r");
   out = fopen(fileo, "w");
 
   assert(in != NULL && out != NULL);
 
-  while (!feof(in)) {
+  while ((c = fscanf(in, "%s", line)) != EOF) {
 
     if (lines > maxlines) {
-      maxlines *= 2;
+      filesize += maxlines;
       arr = (long long *)realloc(arr, maxlines * sizeof(long long));
       if (arr == NULL) {
-        printf("Couldn't reallocate memory for arr! Exiting...\n");
+        printf("%s", "Couldn\'t reallocate memory for arr! Exiting...\n");
         exit(3);
       }
     }
 
-    fgets(line, buffersize, in);
     replacestr(line, rep, with);
     lines++;
 
     val = atoll(line);
     arr[i++] = val;
   }
-  printf("%d", lines);
 
-  qsort(arr, lines - 1, sizeof(long long *), cmpfunc);
-  for (int i = 0; i < lines - 1; i++) {
+  qsort(arr, lines, sizeof(long long *), cmpfunc);
+  for (int i = 0; i < lines; i++) {
     fprintf(out, "%lld\n", arr[i]);
   }
 
