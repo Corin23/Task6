@@ -10,7 +10,6 @@ const char *rep = "123";
 const char *with = "321";
 long long maxlines = 4096;
 
-
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
 
@@ -28,15 +27,15 @@ int cmpfunc(const void *a, const void *b) {
   return (lla > llb ? 1 : lla == llb ? 0 : -1);
 }
 
-void dataprocessing(const char* filei, const char* fileo) {
-  
-  FILE  *in, *out;
+void dataprocessing(const char *filei, const char *fileo) {
+
+  FILE *in, *out;
   long long val;
-  
+
   long long *arr = (long long *)malloc(maxlines * sizeof(long long));
   char *line = (char *)malloc(buffersize * sizeof(char));
-  
-  if(arr == NULL || line == NULL){
+
+  if (arr == NULL || line == NULL) {
     printf("Memory couldn't be allocated! Exiting...\n");
     exit(2);
   }
@@ -50,14 +49,13 @@ void dataprocessing(const char* filei, const char* fileo) {
 
   while (!feof(in)) {
 
-    if (lines > maxlines)
-    {
+    if (lines > maxlines) {
       maxlines *= 2;
-      arr = (long long*)realloc(arr, maxlines * sizeof(long long));
-        if(arr == NULL){
-          printf("Couldn't reallocate memory for arr! Exiting...\n");
-          exit(3);
-        }
+      arr = (long long *)realloc(arr, maxlines * sizeof(long long));
+      if (arr == NULL) {
+        printf("Couldn't reallocate memory for arr! Exiting...\n");
+        exit(3);
+      }
     }
 
     fgets(line, buffersize, in);
@@ -70,9 +68,9 @@ void dataprocessing(const char* filei, const char* fileo) {
   printf("%d", lines);
 
   qsort(arr, lines - 1, sizeof(long long *), cmpfunc);
-  for (int i = 0; i < lines - 1; i++){
+  for (int i = 0; i < lines - 1; i++) {
     fprintf(out, "%lld\n", arr[i]);
-    }
+  }
 
   free(line);
   free(arr);
