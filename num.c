@@ -10,6 +10,7 @@ const char *rep = "123";
 const char *with = "321";
 const long long maxlines = 100000;
 
+
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
 
@@ -27,10 +28,10 @@ int cmpfunc(const void *a, const void *b) {
   return (lla > llb ? 1 : lla == llb ? 0 : -1);
 }
 
-long long *processinput(const char *fin) {
+long long *processinput(const char *fin, int *lines) {
   FILE *in;
   long long val, filesize = maxlines;
-  int lines = 0, c;
+  int c;
 
   long long *arr = (long long *)malloc(filesize * sizeof(long long));
   if (arr == NULL) {
@@ -45,7 +46,6 @@ long long *processinput(const char *fin) {
   }
 
   in = fopen(fin, "r");
-
   if (in == NULL) {
     printf("Couldn't open file in.txt!\n");
     exit(3);
@@ -55,9 +55,9 @@ long long *processinput(const char *fin) {
     replacestr(line, rep, with);
 
     val = atoll(line);
-    arr[lines++] = val;
+    arr[(*lines)++] = val;
 
-    if (lines > maxlines) {
+    if (*lines > maxlines) {
 
       filesize += maxlines;
       arr = (long long *)realloc(arr, filesize * sizeof(long long));
@@ -68,31 +68,13 @@ long long *processinput(const char *fin) {
       }
     }
   }
+
   fclose(in);
   return arr;
   free(arr);
 }
 
-int countlines(const char *filein) {
-  FILE *fin;
-  int s, counter = 0;
-  char *line = (char *)malloc(buffersize * sizeof(char));
-
-  fin = fopen(filein, "r");
-
-  if (fin == NULL) {
-    printf("Couldn't open file");
-    exit(5);
-  }
-
-  while ((s = fscanf(fin, "%s", line)) != EOF)
-    counter++;
-
-  fclose(fin);
-  return counter;
-}
-
-void genoutput(const char *fout, long long *array, int lines) {
+void genoutput(const char *fout, long long *array, int *lines) {
   FILE *out;
   out = fopen(fout, "w");
 
@@ -101,9 +83,8 @@ void genoutput(const char *fout, long long *array, int lines) {
     exit(4);
   }
 
-  qsort(array, lines, sizeof(long long *), cmpfunc);
-
-  for (int i = 0; i < lines; i++) {
+  qsort(array, *lines, sizeof(long long *), cmpfunc);
+  for (int i = 0; i < *lines; i++) {
     fprintf(out, "%lld\n", array[i]);
   }
 
@@ -111,7 +92,9 @@ void genoutput(const char *fout, long long *array, int lines) {
 }
 
 int main() {
-  int nmblines = countlines(file_in);
-  genoutput(file_out, processinput(file_in), nmblines);
+  int lines = 0;
+  long long *Arr = processinput(file_in, &lines);
+  genoutput(file_out, Arr, &lines);
+
   return 0;
 }
