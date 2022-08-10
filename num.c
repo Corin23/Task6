@@ -10,7 +10,6 @@ const char *rep = "123";
 const char *with = "321";
 const long long maxlines = 100000;
 
-
 void replacestr(char *target, const char *what, const char *with) {
   char *pch;
 
@@ -36,19 +35,19 @@ long long *processinput(const char *fin, int *lines) {
   long long *arr = (long long *)malloc(filesize * sizeof(long long));
   if (arr == NULL) {
     printf("Memory not allocated for arr!\n");
-    exit(1);
+    exit(EXIT_FAILURE);
   }
 
   char *line = (char *)malloc(buffersize * sizeof(char));
   if (line == NULL) {
     printf("Memory not allocated for line!\n");
-    exit(2);
+    exit(EXIT_FAILURE);
   }
 
   in = fopen(fin, "r");
   if (in == NULL) {
     printf("Couldn't open file in.txt!\n");
-    exit(3);
+    exit(EXIT_FAILURE);
   }
 
   while ((c = fscanf(in, "%s", line)) != EOF) {
@@ -64,7 +63,7 @@ long long *processinput(const char *fin, int *lines) {
 
       if (arr == NULL) {
         printf("%s", "Couldn\'t reallocate memory for arr! Exiting...\n");
-        exit(3);
+        exit(EXIT_FAILURE);
       }
     }
   }
@@ -74,15 +73,15 @@ long long *processinput(const char *fin, int *lines) {
   free(arr);
 }
 
-void genoutput(const char *fout, long long *array, int *lines) {
+void genoutput(const char *fout, long long *array, const int *lines) {
   FILE *out;
   out = fopen(fout, "w");
 
   if (out == NULL) {
     printf("Couldn't open file out.txt!\n");
-    exit(4);
+    exit(EXIT_FAILURE);
   }
-
+ 
   qsort(array, *lines, sizeof(long long *), cmpfunc);
   for (int i = 0; i < *lines; i++) {
     fprintf(out, "%lld\n", array[i]);
