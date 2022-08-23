@@ -33,18 +33,21 @@ long long *processinput(const char *fin, int *lines) {
   int c;
 
   long long *arr = (long long *)malloc(filesize * sizeof(long long));
+  
   if (arr == NULL) {
     printf("Memory not allocated for arr!\n");
     exit(EXIT_FAILURE);
   }
 
   char *line = (char *)malloc(buffersize * sizeof(char));
+  
   if (line == NULL) {
     printf("Memory not allocated for line!\n");
     exit(EXIT_FAILURE);
   }
 
   in = fopen(fin, "r");
+  
   if (in == NULL) {
     printf("Couldn't open file in.txt!\n");
     exit(EXIT_FAILURE);
@@ -75,6 +78,7 @@ long long *processinput(const char *fin, int *lines) {
 
 void genoutput(const char *fout, long long *array, const int *lines) {
   FILE *out;
+  
   out = fopen(fout, "w");
 
   if (out == NULL) {
